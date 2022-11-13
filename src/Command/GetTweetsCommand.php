@@ -33,6 +33,10 @@ class GetTweetsCommand extends Command
      */
     private string $twitterAccessTokenSecret;
     /**
+     * @var string
+     */
+    private string $twitterSaveFilename;
+    /**
      * @var array|string[]
      */
     private array $desiredUsernames = ['NASA', 'SpaceX', 'BoeingSpace'];
@@ -42,14 +46,16 @@ class GetTweetsCommand extends Command
      * @param $twitterApiSecret
      * @param $twitterAccessToken
      * @param $twitterAccessTokenSecret
+     * @param $twitterSaveFilename
      */
-    public function __construct($twitterApiKey, $twitterApiSecret, $twitterAccessToken, $twitterAccessTokenSecret)
+    public function __construct($twitterApiKey, $twitterApiSecret, $twitterAccessToken, $twitterAccessTokenSecret, $twitterSaveFilename)
     {
         parent::__construct();
         $this->twitterApiKey = $twitterApiKey;
         $this->twitterApiSecret = $twitterApiSecret;
         $this->twitterAccessToken = $twitterAccessToken;
         $this->twitterAccessTokenSecret = $twitterAccessTokenSecret;
+        $this->twitterSaveFilename = $twitterSaveFilename;
     }
 
     /**
@@ -79,7 +85,7 @@ class GetTweetsCommand extends Command
                 sleep(2);
             }
             $tweetsJson = json_encode($tweets);
-            if (file_put_contents('var/tweets.json', $tweetsJson)) {
+            if (file_put_contents($this->twitterSaveFilename, $tweetsJson)) {
                 $io->success('Tweety użytkowników ' . $usernames . ' zostały pobrane i zapisane do pliku.');
                 return Command::SUCCESS;
             } else {
