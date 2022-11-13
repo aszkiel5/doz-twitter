@@ -77,11 +77,12 @@ class GetTweetsCommand extends Command
         $connection->setApiVersion('2');
         $usernames = implode(',', $this->desiredUsernames);
         $usersDataResult = $connection->get("users/by", ["usernames" => $usernames]);
+
         if (!empty($usersDataResult->data)) {
             $tweets = [];
             foreach ($usersDataResult->data as $user) {
                 $userTweetsResult = $connection->get("users/{$user->id}/tweets");
-                $tweets[$user->id] = $userTweetsResult->data;
+                $tweets[mb_strtolower($user->username)] = $userTweetsResult->data;
                 sleep(2);
             }
             $tweetsJson = json_encode($tweets);
